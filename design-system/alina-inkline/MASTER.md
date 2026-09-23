@@ -1,227 +1,51 @@
-# Design System Master File
+# ALINA INKLINE — дизайн-система
 
-> **LOGIC:** When building a specific page, first check `design-system/pages/[page-name].md`.
-> If that file exists, its rules **override** this Master file.
-> If not, strictly follow the rules below.
+Актуальное визуальное направление описано в `DESIGN_DIRECTION.md`, а рабочие значения токенов — в `src/styles.css`. Этот файл фиксирует правила для следующих изменений интерфейса. Намеренная асимметрия — часть концепции, но она не должна ломать чтение или базовую сетку.
 
----
+## Цвет
 
-**Project:** ALINA INKLINE
-**Generated:** 2026-09-21 11:50:34
-**Category:** Creative Agency
-**Design Dials:** Variance 9/10 (Bold / Asymmetric) | Motion 9/10 (Complex) | Density 5/10 (Standard)
+| Роль | Токен | Значение |
+| --- | --- | --- |
+| Основной фон и текст на светлом | `--paper-100` / `--ink-950` | `#e8e3d8` / `#0b0b0b` |
+| Светлый текст на тёмном | `--paper-50` | `#f2eee5` |
+| Сигнальный красный | `--signal-600` | `#c41624` |
+| Красный при наведении | `--signal-700` | `#9e111c` |
+| Красный текст на тёмном | `--signal-on-dark` | `#ef4050` |
+| Служебный графит | `--graphite-500` | `#68635d` |
 
----
+Красный отмечает действие, движение и переход; не вводить второй акцентный цвет. Для текста на красном использовать светлую бумагу. Контраст обычного текста — не ниже 4.5:1.
 
-## Global Rules
+## Типографика
 
-### Color Palette
+- `--display`: локальный Oswald — крупные заголовки, карточки, вопросы FAQ, действия.
+- `--editorial`: локальный Cormorant — основной текст и выразительный курсив.
+- `--mono`: локальный IBM Plex Mono — навигация, номера, метки, пояснения.
+- Крупная типографика может выходить за композиционную сетку в hero, манифесте и галерее. Слова в шагах процесса, FAQ, форме и кнопках должны оставаться целыми и читаемыми на любом экране.
 
-| Role | Hex | CSS Variable |
-|------|-----|--------------|
-| Primary | `#18181B` | `--color-primary` |
-| On Primary | `#FFFFFF` | `--color-on-primary` |
-| Secondary | `#3F3F46` | `--color-secondary` |
-| Accent/CTA | `#2563EB` | `--color-accent` |
-| Background | `#FAFAFA` | `--color-background` |
-| Foreground | `#09090B` | `--color-foreground` |
-| Muted | `#E8ECF0` | `--color-muted` |
-| Border | `#E4E4E7` | `--color-border` |
-| Destructive | `#DC2626` | `--color-destructive` |
-| Ring | `#18181B` | `--color-ring` |
+## Сетка и отступы
 
-**Color Notes:** Monochrome + blue accent
+- Базовая сетка: 12 равных колонок, `column-gap: clamp(.75rem, 1.4vw, 1.5rem)`.
+- Внешний отступ: `--gutter: clamp(1rem, 2.4vw, 2.5rem)` с учётом safe-area.
+- Шкала расстояний: `--space-1`…`--space-32` в `src/styles.css`; повторяющиеся отступы должны опираться на неё либо на обоснованную адаптивную формулу.
+- Вертикальные разделители и горизонтальные линии — тонкие, без теней и скруглений. По обе стороны базового разделителя содержимое должно иметь сопоставимые отступы. В секции «От идеи до кожи» расстояние от карточки ухода до линии равно расстоянию от линии до номеров шагов (погрешность до 1 px при ширине 1025–1902 px).
+- На ширине до 1024 px процесс складывается в один поток, разделитель исчезает, карточка не получает лишний правый отступ.
 
-### Typography
+## Компоненты
 
-- **Heading Font:** Playfair Display
-- **Body Font:** Source Serif 4
-- **Mood:** monochrome, editorial, austere, typographic, pocket manifesto, luxury, high contrast, brutalist mobile
-- **Google Fonts:** [Playfair Display + Source Serif 4](https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400|Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300)
+- Углы квадратные. Тени не используются: глубина создаётся фото, типографикой, линиями и цветными плоскостями.
+- Кнопки, ссылки и поля имеют видимое состояние фокуса; изменение цвета и фона не вызывает сдвига соседних элементов.
+- Навигация, FAQ и форма следуют предсказуемой сетке. Форма — демонстрационная, без скрытой отправки данных.
+- Фотографии сейчас временные: монохром, повышенный контраст, единая редакционная обработка. Подписи о временном характере изображений сохраняются до замены на реальные работы.
 
-**CSS Import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap');
-```
+## Адаптивность и движение
 
-### Spacing Variables
+- Проверять 320, 360, 390, 430, 768, 1024, 1440 px и широкие десктопы. Горизонтальная прокрутка страницы и обрезанные элементы управления недопустимы.
+- Намеренные перекрытия допускаются в hero, коллаже и архиве работ, если смысловой текст остаётся читаемым. Не переносить этот приём на информационные блоки.
+- Анимация поддерживает печатный ритм, но не передаёт обязательную информацию. При `prefers-reduced-motion: reduce` композиция остаётся полноценной статичной страницей.
+- Мобильные цели нажатия и отступы должны оставаться удобными для пальца; ориентир — не меньше 44×44 px там, где это позволяет компонент.
 
-*Density: 5/10 — Standard*
+## Перед выпуском
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--space-xs` | `4px` / `0.25rem` | Tight gaps |
-| `--space-sm` | `8px` / `0.5rem` | Icon gaps, inline spacing |
-| `--space-md` | `16px` / `1rem` | Standard padding |
-| `--space-lg` | `24px` / `1.5rem` | Section padding |
-| `--space-xl` | `32px` / `2rem` | Large gaps |
-| `--space-2xl` | `48px` / `3rem` | Section margins |
-| `--space-3xl` | `64px` / `4rem` | Hero padding |
-
-### Shadow Depths
-
-| Level | Value | Usage |
-|-------|-------|-------|
-| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift |
-| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)` | Cards, buttons |
-| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)` | Modals, dropdowns |
-| `--shadow-xl` | `0 20px 25px rgba(0,0,0,0.15)` | Hero images, featured cards |
-
----
-
-## Component Specs
-
-### Buttons
-
-```css
-/* Primary Button */
-.btn-primary {
-  background: #2563EB;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 200ms ease;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-/* Secondary Button */
-.btn-secondary {
-  background: transparent;
-  color: #18181B;
-  border: 2px solid #18181B;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 200ms ease;
-  cursor: pointer;
-}
-```
-
-### Cards
-
-```css
-.card {
-  background: #FAFAFA;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: var(--shadow-md);
-  transition: all 200ms ease;
-  cursor: pointer;
-}
-
-.card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-}
-```
-
-### Inputs
-
-```css
-.input {
-  padding: 12px 16px;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 200ms ease;
-}
-
-.input:focus {
-  border-color: #18181B;
-  outline: none;
-  box-shadow: 0 0 0 3px #18181B20;
-}
-```
-
-### Modals
-
-```css
-.modal-overlay {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-}
-
-.modal {
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: var(--shadow-xl);
-  max-width: 500px;
-  width: 90%;
-}
-```
-
----
-
-## Style Guidelines
-
-**Style:** Kinetic Brutalism (Mobile)
-
-**Keywords:** kinetic, brutalism, motion, marquee, acid yellow, uppercase, oversized, aggressive typography, street, zine, high contrast, scroll-driven, haptic, reanimated
-
-**Best For:** Immersive storytelling apps, brand flagship mobile, music/culture platforms, sports apps, underground zines, limited-edition product drops, performance dashboards
-
-**Key Effects:** Infinite marquee (Reanimated, Linear easing, 5s loop, hard clip), hero parallax (scale 1.0→1.3 + fade), sticky section header push, card flood inversion on press (bg→#DFE104, text→#000000), haptic Medium on every press, scroll-triggered interpolate transforms, 0px radius, 2px borders, 100ms color transitions
-
-### Page Pattern
-
-**Pattern Name:** Portfolio Grid
-
-- **Conversion Strategy:** Visuals first. Filter by category. Fast loading essential.
-- **CTA Placement:** Project Card Hover + Footer Contact
-- **Section Order:** 1. Hero (Name/Role), 2. Project Grid (Masonry), 3. About/Philosophy, 4. Contact
-
----
-
-## Motion
-
-**Page Transition** (Complex) — Trigger: route change | Duration: 500-800ms | Easing: `expo.inOut`
-
-```js
-const state = Flip.getState('.hero-image'); navigate(); Flip.from(state, { duration: 0.6, ease: 'expo.inOut', absolute: true, zIndex: 100 });
-```
-
-**Framework notes:** Requires the GSAP Flip plugin; the 'from' and 'to' route must render the same element with a shared data-flip-id
-
-- ✅ Verify the shared element exists in both DOM states before calling Flip.from to avoid a silent no-op
-- ❌ Don't use shared-element transitions across more than one element pair per navigation; compounding Flips are hard to time correctly
-- ⚡ Flip recalculates layout (FLIP technique) so test on low-end devices for jank
-
----
-
-## Anti-Patterns (Do NOT Use)
-
-- ❌ Corporate minimalism
-- ❌ Hidden portfolio
-
-### Additional Forbidden Patterns
-
-- ❌ **Emojis as icons** — Use SVG icons (Heroicons, Lucide, Simple Icons)
-- ❌ **Missing cursor:pointer** — All clickable elements must have cursor:pointer
-- ❌ **Layout-shifting hovers** — Avoid scale transforms that shift layout
-- ❌ **Low contrast text** — Maintain 4.5:1 minimum contrast ratio
-- ❌ **Instant state changes** — Always use transitions (150-300ms)
-- ❌ **Invisible focus states** — Focus states must be visible for a11y
-
----
-
-## Pre-Delivery Checklist
-
-Before delivering any UI code, verify:
-
-- [ ] No emojis used as icons (use SVG instead)
-- [ ] All icons from consistent icon set (Heroicons/Lucide)
-- [ ] `cursor-pointer` on all clickable elements
-- [ ] Hover states with smooth transitions (150-300ms)
-- [ ] Light mode: text contrast 4.5:1 minimum
-- [ ] Focus states visible for keyboard navigation
-- [ ] `prefers-reduced-motion` respected
-- [ ] Responsive: 375px, 768px, 1024px, 1440px
-- [ ] No content hidden behind fixed navbars
-- [ ] No horizontal scroll on mobile
+- Проверить выравнивание базовых элементов и читаемость всех заголовков на указанных ширинах.
+- Проверить отсутствие случайного горизонтального overflow, видимые состояния фокуса и работу клавиатуры.
+- Запустить `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.

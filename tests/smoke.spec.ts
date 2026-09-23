@@ -119,13 +119,36 @@ test('mobile headings and work cards stay readable at narrow widths', async ({ p
   }
 })
 
-test('process title and care card stay clear of the desktop steps', async ({ page }, testInfo) => {
+test('process card and step numbers balance the divider on desktop', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chrome-1440')
-  const bounds = await page.evaluate(() => ({
-    title: document.querySelector('.process__heading')!.getBoundingClientRect().right,
-    care: document.querySelector('.care-card')!.getBoundingClientRect().right,
-    steps: document.querySelector('.process-list')!.getBoundingClientRect().left,
-  }))
-  expect(bounds.title).toBeLessThan(bounds.steps)
-  expect(bounds.care).toBeLessThan(bounds.steps)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.reload()
+  for (const width of [1025, 1280, 1440, 1902]) {
+    await page.setViewportSize({ width, height: 900 })
+    const bounds = await page.evaluate(() => {
+      const process = document.querySelector('.process')!
+      const divider = process.getBoundingClientRect().left + parseFloat(getComputedStyle(process, '::before').left)
+      return {
+        title: document.querySelector('.process__heading')!.getBoundingClientRect().right,
+        card: document.querySelector('.care-card')!.getBoundingClientRect().right,
+        number: document.querySelector('.process-step > span')!.getBoundingClientRect().left,
+        divider,
+      }
+    })
+    expect(bounds.title, `${width}px title should stay left of the divider`).toBeLessThan(bounds.divider)
+    expect(bounds.card, `${width}px card should stay left of the divider`).toBeLessThan(bounds.divider)
+    expect(bounds.number, `${width}px numbers should stay right of the divider`).toBeGreaterThan(bounds.divider)
+    expect(Math.abs((bounds.divider - bounds.card) - (bounds.number - bounds.divider)), `${width}px divider gaps should match`).toBeLessThanOrEqual(1)
+  }
+})
+
+test('tablet booking fields do not squeeze into narrow columns', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chrome-1440')
+  for (const width of [768, 1024, 1100]) {
+    await page.setViewportSize({ width, height: 900 })
+    const fields = await page.locator('.booking-form .field').evaluateAll((elements) =>
+      elements.slice(0, 2).map((element) => element.getBoundingClientRect().toJSON()),
+    )
+    expect(fields[1].top, `${width}px contact field should follow the name field`).toBeGreaterThan(fields[0].bottom)
+  }
 })
