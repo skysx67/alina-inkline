@@ -83,9 +83,12 @@ export function BookingForm() {
         <input id="date" name="date" type="date" required value={draft.preferredDate} onChange={(event) => update('preferredDate', event.target.value)} />
       </div>
       <div className="field field--files">
-        <label htmlFor="references">Референсы</label>
-        <input id="references" name="references" type="file" accept="image/*" multiple onChange={(event) => update('referenceFileNames', Array.from(event.target.files ?? []).map((file) => file.name))} />
-        <span>{draft.referenceFileNames.length ? draft.referenceFileNames.join(' / ') : 'Можно выбрать несколько изображений. Файлы не загружаются.'}</span>
+        <span className="field-label">Референсы</span>
+        <div className="file-picker">
+          <input id="references" name="references" type="file" accept="image/*" multiple onChange={(event) => update('referenceFileNames', Array.from(event.target.files ?? []).map((file) => file.name))} />
+          <label htmlFor="references">Выбрать изображения <span aria-hidden="true">↗</span></label>
+        </div>
+        <span aria-live="polite">{draft.referenceFileNames.length ? draft.referenceFileNames.join(' / ') : 'Можно выбрать несколько изображений. Файлы не загружаются.'}</span>
       </div>
       <label className="demo-check" htmlFor="demoConfirmed">
         <input id="demoConfirmed" name="demoConfirmed" type="checkbox" required checked={draft.demoConfirmed} onChange={(event) => update('demoConfirmed', event.target.checked)} />

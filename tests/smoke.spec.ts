@@ -90,3 +90,42 @@ test('page has no accidental horizontal overflow', async ({ page }) => {
   })
   expect(overflow).toBeLessThanOrEqual(1)
 })
+
+test('mobile headings and work cards stay readable at narrow widths', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-360')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+
+  for (const width of [320, 360, 390, 430]) {
+    await page.setViewportSize({ width, height: 800 })
+    const layout = await page.evaluate(() => {
+      const selectors = ['.manifest__headline', '.collage__heading h2', '.about__title', '.process__heading h2', '.care-card h3', '.booking__intro h2', '.final-cta h2']
+      const textBounds = selectors.map((selector) => {
+        const element = document.querySelector(selector)!
+        const range = document.createRange()
+        range.selectNodeContents(element)
+        const rects = Array.from(range.getClientRects())
+        return { selector, left: Math.min(...rects.map((rect) => rect.left)), right: Math.max(...rects.map((rect) => rect.right)) }
+      })
+      const firstWork = document.querySelector('.work-card:first-child')!.getBoundingClientRect()
+      const secondWork = document.querySelector('.work-card:nth-child(2)')!.getBoundingClientRect()
+      return { textBounds, firstWorkBottom: firstWork.bottom, secondWorkTop: secondWork.top, viewportWidth: document.documentElement.clientWidth }
+    })
+
+    for (const bounds of layout.textBounds) {
+      expect(bounds.left, `${width}px ${bounds.selector} starts outside the viewport`).toBeGreaterThanOrEqual(0)
+      expect(bounds.right, `${width}px ${bounds.selector} ends outside the viewport`).toBeLessThanOrEqual(layout.viewportWidth)
+    }
+    expect(layout.firstWorkBottom, `${width}px work cards should stack vertically`).toBeLessThan(layout.secondWorkTop)
+  }
+})
+
+test('process title and care card stay clear of the desktop steps', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chrome-1440')
+  const bounds = await page.evaluate(() => ({
+    title: document.querySelector('.process__heading')!.getBoundingClientRect().right,
+    care: document.querySelector('.care-card')!.getBoundingClientRect().right,
+    steps: document.querySelector('.process-list')!.getBoundingClientRect().left,
+  }))
+  expect(bounds.title).toBeLessThan(bounds.steps)
+  expect(bounds.care).toBeLessThan(bounds.steps)
+})

@@ -215,7 +215,7 @@ function App() {
             <div className="works__header section-grid">
               <span className="label">SELECTED DIRECTION / 002—009</span>
               <h2 id="works-title">РАБОТЫ</h2>
-              <p>Вертикальный скролл / горизонтальный архив</p>
+              <p><span className="works__hint-desktop">Вертикальный скролл / горизонтальный архив</span><span className="works__hint-mobile">Листай вниз / нажми, чтобы открыть</span></p>
             </div>
             <div className="works-viewport">
               <div className="works-track">
@@ -272,7 +272,7 @@ function App() {
             <span className="transition-scene__type transition-scene__type--left">MOVE WITH</span>
             <span className="transition-scene__type transition-scene__type--right">THE LINE</span>
           </div>
-          <p className="transition-scene__fallback-note label">WEBGL DIRECTIONAL BLUR / CSS FALLBACK READY</p>
+          <p className="transition-scene__fallback-note label">ДВИЖЕНИЕ / ЛИНИЯ / ТЕЛО</p>
         </section>
 
         <section className="faq section-grid" id="faq" aria-labelledby="faq-title">
